@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JPipe.iml" filepath="$PROJECT_DIR$/JPipe.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpipe/app.iml" filepath="$PROJECT_DIR$/jpipe/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jstraw/jpipe.iml" filepath="$PROJECT_DIR$/jstraw/jpipe.iml" />
     </modules>
   </component>
 </project>

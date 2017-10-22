@@ -1,4 +1,4 @@
-package com.xiansenliu.jpipe
+package com.xiansenliu.jstraw
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

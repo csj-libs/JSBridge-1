@@ -1,4 +1,4 @@
-package com.xiansenliu.jpipe
+package com.xiansenliu.jstraw
 
 import org.junit.Test
 
