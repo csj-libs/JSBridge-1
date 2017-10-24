@@ -37,6 +37,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin
     implementation deps.gson
+    implementation deps.annotation
 //    implementation deps.appcompat_v7
     testImplementation deps.junit
     androidTestImplementation deps.runner

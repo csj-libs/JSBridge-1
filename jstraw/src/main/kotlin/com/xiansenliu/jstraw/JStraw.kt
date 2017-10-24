@@ -1,5 +1,6 @@
 package com.xiansenliu.jstraw
 
+import android.support.annotation.MainThread
 import android.webkit.WebView
 import com.xiansenliu.jstraw.i.IJStraw
 import com.xiansenliu.jstraw.i.IPivot
@@ -18,15 +19,16 @@ class JStraw internal constructor(wv: WebView) : IJStraw {
 
     }
 
+    @MainThread
     override fun callJSFun(identity: String, data: String, callback: NativeCallback<*>?) {
-        pivot.transact(identity, data,callback)
+        pivot.transact(identity, data, callback)
     }
 
     fun callJSFun(identity: String, data: Any, callback: NativeCallback<*>?) {
         callJSFun(identity, obj2Json(data), callback)
     }
 
-    override fun registerNativeHandler(handler: NativeHandler<*>) {
+    override fun registerNativeHandler(handler: NativeHandler<*, *>) {
         pivot.addHandler(handler)
     }
 
@@ -36,6 +38,7 @@ class JStraw internal constructor(wv: WebView) : IJStraw {
 
     companion object {
         val TAG = JStraw::class.java.simpleName
+        @MainThread
         fun create(wv: WebView): IJStraw = JStraw(wv)
     }
 
