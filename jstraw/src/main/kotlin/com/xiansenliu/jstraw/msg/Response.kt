@@ -21,6 +21,4 @@ data class Response<T>(
         fun cancel(): Response<String> = Response(STATUS_CANCEL, "canceled", "")
         fun failed(msg: String): Response<String> = Response(STATUS_FAILED, msg, "")
     }
-
-
 }

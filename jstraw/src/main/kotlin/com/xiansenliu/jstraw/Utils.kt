@@ -24,11 +24,11 @@ internal fun generateCallbackId(name: String): String {
     return uuid.toString().replace("-", "")
 }
 
-fun transact2JS(wv: WebView, params: String) {
+internal fun transact2JS(wv: WebView, params: String) {
     wv.loadUrl("javascript:transact($params)")
 }
 
-fun response2JS(wv: WebView, params: String) {
+internal fun response2JS(wv: WebView, params: String) {
     wv.loadUrl("javascript:onResponse($params)")
 
 }
