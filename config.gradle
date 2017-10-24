@@ -19,6 +19,7 @@ ext {
 
             appcompat_v7: "com.android.support:appcompat-v7:$support_lib_version",
             design      : "com.android.support:design:$support_lib_version",
+            gson        : "com.google.code.gson:gson:2.8.2",
             junit       : "junit:junit:4.12",
             runner      : "com.android.support.test:runner:1.0.1",
             espresso    : "com.android.support.test.espresso:espresso-core:3.0.1"

@@ -35,10 +35,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation deps.kotlin
     implementation deps.appcompat_v7
     testImplementation deps.junit
     androidTestImplementation deps.runner
     androidTestImplementation deps.espresso
+    implementation project(':jstraw')
 }
