@@ -18,8 +18,14 @@ interface NativeHandler<T, R> {
     fun handleJSCall(data: String, wv: WebView) {
         val request = json2Obj<Request<T>>(data)
         val response = handle(request.params)
-        response2JS(wv, obj2Json(response))
+        response(wv, request, response)
     }
 
     fun handle(data: T): Response<R>
+
+    fun response(wv: WebView, request: Request<T>, response: Response<R>) {
+        if (request.callbackId.isNotEmpty()) {
+            response2JS(wv, request.callbackId, obj2Json(response))
+        }
+    }
 }

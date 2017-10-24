@@ -28,7 +28,7 @@ internal fun transact2JS(wv: WebView, params: String) {
     wv.loadUrl("javascript:transact($params)")
 }
 
-internal fun response2JS(wv: WebView, params: String) {
-    wv.loadUrl("javascript:onResponse($params)")
+internal fun response2JS(wv: WebView, callbackId: String, params: String) {
+    wv.loadUrl("javascript:onResponse($callbackId,$params)")
 
 }

@@ -20,12 +20,12 @@ class JStraw internal constructor(wv: WebView) : IJStraw {
     }
 
     @MainThread
-    override fun callJSFun(identity: String, data: String, callback: NativeCallback<*>?) {
+    override fun callJS(identity: String, data: String, callback: NativeCallback<*>?) {
         pivot.transact(identity, data, callback)
     }
 
     fun callJSFun(identity: String, data: Any, callback: NativeCallback<*>?) {
-        callJSFun(identity, obj2Json(data), callback)
+        callJS(identity, obj2Json(data), callback)
     }
 
     override fun registerNativeHandler(handler: NativeHandler<*, *>) {
