@@ -12,12 +12,12 @@ internal interface IPivot {
     /**
      * this method is used to call JS function
      * */
-    fun transact(identity: String, data: String, callback: NativeCallback<*>?)
+    fun transact(funname: String, data: String, callback: NativeCallback<*>?)
 
     /**
      * this method will received JS's call
      * */
-    fun onTransact(identity: String, data: String)
+    fun onTransact(funname: String, data: String)
 
     /**
      * used to receive response from JS

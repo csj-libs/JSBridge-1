@@ -18,19 +18,19 @@ class Pivot(private val wv: WebView, private val straw: IJStraw) : IPivot {
             LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
     private val callbacks = ArrayMap<String, NativeCallback<*>>()
 
-    override fun transact(identity: String, data: String, callback: NativeCallback<*>?) {
-        val callbackId = generateCallbackId(identity)
+    override fun transact(funname: String, data: String, callback: NativeCallback<*>?) {
+        val callbackId = generateCallbackId(funname)
         if (callback != null) {
             callbacks.put(callbackId, callback)
         }
-        val request = Request.create(identity, callbackId, data)
+        val request = Request.create(funname, callbackId, data)
         val json = obj2Json(request)
         transact2JS(wv, json)
     }
 
     @JavascriptInterface
-    override fun onTransact(identity: String, data: String) {
-        val handler = handlers[identity] ?: UndefinedNativeHandler
+    override fun onTransact(funname: String, data: String) {
+        val handler = handlers[funname] ?: UndefinedNativeHandler
         handler.handleJSCall(data, wv)
     }
 

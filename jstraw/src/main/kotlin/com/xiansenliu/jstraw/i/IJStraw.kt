@@ -11,7 +11,7 @@ interface IJStraw {
 
     fun init()
 
-    fun callJS(identity: String, data: String="", callback: NativeCallback<*>? = null)
+    fun callJS(funname: String, data: String="", callback: NativeCallback<*>? = null)
 
     fun registerNativeHandler(handler: NativeHandler<*,*>)
     fun unregisterNativeHandler(description:String)

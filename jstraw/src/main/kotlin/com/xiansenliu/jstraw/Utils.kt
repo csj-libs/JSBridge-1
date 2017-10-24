@@ -25,10 +25,10 @@ internal fun generateCallbackId(name: String): String {
 }
 
 internal fun transact2JS(wv: WebView, params: String) {
-    wv.loadUrl("javascript:transact($params)")
+    wv.loadUrl("javascript:pivot.onTransact($params)")
 }
 
 internal fun response2JS(wv: WebView, callbackId: String, params: String) {
-    wv.loadUrl("javascript:onResponse($callbackId,$params)")
+    wv.loadUrl("javascript:pivot.onResponse($callbackId,$params)")
 
 }

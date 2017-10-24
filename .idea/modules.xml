@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JPipe.iml" filepath="$PROJECT_DIR$/JPipe.iml" />
       <module fileurl="file://$PROJECT_DIR$/JStraw.iml" filepath="$PROJECT_DIR$/JStraw.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jpipe/app.iml" filepath="$PROJECT_DIR$/jpipe/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jstraw/jpipe.iml" filepath="$PROJECT_DIR$/jstraw/jpipe.iml" />
       <module fileurl="file://$PROJECT_DIR$/jstraw/jstraw.iml" filepath="$PROJECT_DIR$/jstraw/jstraw.iml" />
       <module fileurl="file://$PROJECT_DIR$/jstraw-ext/jstraw-ext.iml" filepath="$PROJECT_DIR$/jstraw-ext/jstraw-ext.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
