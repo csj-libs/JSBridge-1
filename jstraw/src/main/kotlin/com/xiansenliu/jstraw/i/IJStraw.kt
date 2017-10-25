@@ -9,10 +9,12 @@ import com.xiansenliu.jstraw.callback.NativeCallback
  */
 interface IJStraw {
 
-    fun init()
 
-    fun callJS(funname: String, data: String="", callback: NativeCallback<*>? = null)
+    fun callJS(handlerName: String, data: String = "{}", callback: NativeCallback<*>? = null)
 
-    fun registerNativeHandler(handler: NativeHandler<*,*>)
-    fun unregisterNativeHandler(description:String)
+    fun registerNativeHandler(handler: NativeHandler<*, *>)
+    fun findNativeHandler(handlerName: String): NativeHandler<*, *>?
+
+    fun addCallback(callbackId: String, callback: NativeCallback<*>)
+    fun removeCallback(callbackId: String): NativeCallback<*>?
 }

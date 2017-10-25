@@ -13,13 +13,9 @@ abstract class NativeCallback<T> {
         val response = json2Obj<Response<T>>(data)
         when (response.status) {
             Response.STATUS_OK -> onSuccess(response.data)
-            Response.STATUS_FAILED -> {
-                onFailed(response.msg)
-                return
-            }
+            Response.STATUS_FAILED -> onFailed(response.msg)
             Response.STATUS_CANCEL -> onCancel()
         }
-        onComplete()
     }
 
     open fun onSuccess(data: T) {}
@@ -27,8 +23,4 @@ abstract class NativeCallback<T> {
     open fun onFailed(msg: String) {}
 
     open fun onCancel() {}
-    /**
-     * will be called after onSuccess() or onFailed() is called
-     * */
-    open fun onComplete() {}
 }

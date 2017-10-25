@@ -1,6 +1,11 @@
 # JPipe
 A robust android library help with the interaction between Java and JavaScript
 
+## TODO
+-[ ] Basic function
+-[ ] separate the communication Schema
+
+
 ## License
 ```
    Licensed under the Apache License, Version 2.0 (the "License");

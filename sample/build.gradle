@@ -43,3 +43,4 @@ dependencies {
     androidTestImplementation deps.espresso
     implementation project(':jstraw')
 }
+

@@ -1,6 +1,7 @@
 package com.xiansenliu.jstraw
 
 import android.support.annotation.MainThread
+import android.util.ArrayMap
 import android.webkit.WebView
 import com.xiansenliu.jstraw.i.IJStraw
 import com.xiansenliu.jstraw.i.IPivot
@@ -15,25 +16,32 @@ import com.xiansenliu.jstraw.callback.NativeCallback
 class JStraw internal constructor(wv: WebView) : IJStraw {
     private val pivot: IPivot = Pivot(wv, this)
 
-    override fun init() {
+    private val handlers =
+            LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
+    private val callbacks = ArrayMap<String, NativeCallback<*>>()
 
+    override fun callJS(handlerName: String, data: String, callback: NativeCallback<*>?) {
+        pivot.callJS(handlerName, data, callback)
     }
 
-    @MainThread
-    override fun callJS(funname: String, data: String, callback: NativeCallback<*>?) {
-        pivot.transact(funname, data, callback)
-    }
-
-    fun callJSFun(identity: String, data: Any, callback: NativeCallback<*>?) {
-        callJS(identity, obj2Json(data), callback)
+    fun callJSFun(handlerName: String, data: Any, callback: NativeCallback<*>?) {
+        callJS(handlerName, obj2Json(data), callback)
     }
 
     override fun registerNativeHandler(handler: NativeHandler<*, *>) {
-        pivot.addHandler(handler)
+        handlers.put(handler.description(), handler)
     }
 
-    override fun unregisterNativeHandler(description: String) {
-        pivot.removeHandler(description)
+    override fun findNativeHandler(handlerName: String): NativeHandler<*, *>? {
+        return handlers[handlerName]
+    }
+
+    override fun addCallback(callbackId: String, callback: NativeCallback<*>) {
+        callbacks.put(callbackId, callback)
+    }
+
+    override fun removeCallback(callbackId: String): NativeCallback<*>? {
+        return callbacks.remove(callbackId)
     }
 
     companion object {

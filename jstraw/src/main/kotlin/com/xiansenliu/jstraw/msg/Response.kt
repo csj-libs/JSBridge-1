@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 /**
  * Created by xinliu on 10/24/17.
+ * Model that represents the response send 2 and from JS
  */
 data class Response<T>(
         @SerializedName("status")

@@ -4,10 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 /**
  * Created by xinliu on 10/24/17.
+ * Model that represents the request 2 and from JS
  */
 data class Request<T>(
-        @SerializedName("funname")
-        val funname: String,
+        @SerializedName("handler_name")
+        val handlerName: String,
         @SerializedName("callback_id")
         val callbackId: String,
         @SerializedName("params")

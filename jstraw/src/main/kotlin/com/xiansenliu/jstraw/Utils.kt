@@ -1,5 +1,7 @@
 package com.xiansenliu.jstraw
 
+import android.os.Handler
+import android.os.Looper
 import android.webkit.WebView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -24,11 +26,21 @@ internal fun generateCallbackId(name: String): String {
     return uuid.toString().replace("-", "")
 }
 
-internal fun transact2JS(wv: WebView, params: String) {
-    wv.loadUrl("javascript:pivot.onTransact($params)")
+internal fun callJS(wv: WebView, params: String) {
+    execOnMain { wv.loadUrl("javascript:pivot.callFromJS($params)") }
 }
 
 internal fun response2JS(wv: WebView, callbackId: String, params: String) {
-    wv.loadUrl("javascript:pivot.onResponse($callbackId,$params)")
-
+    execOnMain { wv.loadUrl("javascript:pivot.responseFromJS($callbackId,$params)") }
 }
+
+internal inline fun execOnMain(crossinline f: () -> Unit) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        f()
+    } else {
+        Handler(Looper.getMainLooper()).post {
+            f()
+        }
+    }
+}
+
