@@ -50,3 +50,5 @@ captures/
 /JSLib/node_modules/
 /JSLib/dist
 /JSLib/.cache
+/jstraw/src/main/assets/straw.bundle-*.js
+/jstraw-ext/src/main/assets/straw_ext.bundle-*.js
