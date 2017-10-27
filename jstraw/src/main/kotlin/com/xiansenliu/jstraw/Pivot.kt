@@ -11,23 +11,24 @@ import com.xiansenliu.jstraw.msg.Request
  * Created by xinliu on 10/23/17.
  */
 class Pivot(private val wv: WebView, private val straw: IJStraw) : IPivot {
-    override fun callJS(handlerName: String, data: String, callback: NativeCallback<*>?) {
-        val callbackId = generateCallbackId(handlerName)
+    private var uniqueId = 0
+    override fun callJS(handlerName: String, params: String, callback: NativeCallback<*>?) {
+        val callbackId = uniqueId++
         if (callback != null) {
             straw.addCallback(callbackId, callback)
         }
-        val request = Request.create(handlerName, callbackId, data)
+        val request = Request.create(handlerName, callbackId, params)
         callJS(wv, obj2Json(request))
     }
 
     @JavascriptInterface
-    override fun callFromJS(handlerName: String, data: String) {
+    override fun callFromJS(handlerName: String, request: String) {
         val handler = straw.findNativeHandler(handlerName) ?: UndefinedNativeHandler
-        handler.handleJSCall(data, wv)
+        handler.handleJSCall(request, wv)
     }
 
     @JavascriptInterface
-    override fun responseFromJS(callbackId: String, data: String) {
+    override fun responseFromJS(callbackId: Int, data: String) {
         straw.removeCallback(callbackId)?.deliver(data)
     }
 

@@ -2,6 +2,7 @@ package com.xiansenliu.jstraw
 
 import android.support.annotation.MainThread
 import android.util.ArrayMap
+import android.util.SparseArray
 import android.webkit.WebView
 import com.xiansenliu.jstraw.i.IJStraw
 import com.xiansenliu.jstraw.i.IPivot
@@ -13,12 +14,12 @@ import com.xiansenliu.jstraw.callback.NativeCallback
  * Date         10/22/17
  * Time         10:15 AM
  */
-class JStraw internal constructor(wv: WebView) : IJStraw {
+class JStraw internal constructor(wv: WebView) : IJStraw() {
     private val pivot: IPivot = Pivot(wv, this)
 
     private val handlers =
             LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
-    private val callbacks = ArrayMap<String, NativeCallback<*>>()
+    private val callbacks = SparseArray<NativeCallback<*>>()
 
     override fun callJS(handlerName: String, data: String, callback: NativeCallback<*>?) {
         pivot.callJS(handlerName, data, callback)
@@ -36,12 +37,14 @@ class JStraw internal constructor(wv: WebView) : IJStraw {
         return handlers[handlerName]
     }
 
-    override fun addCallback(callbackId: String, callback: NativeCallback<*>) {
+    override fun addCallback(callbackId: Int, callback: NativeCallback<*>) {
         callbacks.put(callbackId, callback)
     }
 
-    override fun removeCallback(callbackId: String): NativeCallback<*>? {
-        return callbacks.remove(callbackId)
+    override fun removeCallback(callbackId: Int): NativeCallback<*>? {
+        val callback = callbacks[callbackId]
+        callbacks.remove(callbackId)
+        return callback
     }
 
     companion object {

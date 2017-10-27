@@ -10,12 +10,12 @@ data class Request<T>(
         @SerializedName("handler_name")
         val handlerName: String,
         @SerializedName("callback_id")
-        val callbackId: String,
+        val callbackId: Int,
         @SerializedName("params")
         val params: T
 ) {
     companion object {
-        fun <T> create(callId: String, callbackId: String, params: T): Request<T> {
+        fun <T> create(callId: String, callbackId: Int, params: T): Request<T> {
             return Request(callId, callbackId, params)
         }
     }

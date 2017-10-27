@@ -15,16 +15,16 @@ import com.xiansenliu.jstraw.response2JS
  * handle the call from JS environment in main Thread
  */
 interface PostNativeHandler<T, R> : NativeHandler<T, R> {
-    override fun handleJSCall(data: String, wv: WebView) {
+    override fun handleJSCall(requestStr: String, wv: WebView) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            val request = json2Obj<Request<T>>(data)
+            val request = json2Obj<Request<T>>(requestStr)
             val mainHandler = Handler(Looper.getMainLooper())
             mainHandler.post {
                 val response = handle(request.params)
-                response(wv, request, response)
+                response2JS(wv, request.callbackId, obj2Json(response))
             }
         } else {
-            super.handleJSCall(data, wv)
+            super.handleJSCall(requestStr, wv)
         }
     }
 }

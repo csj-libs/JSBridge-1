@@ -27,11 +27,11 @@ internal fun generateCallbackId(name: String): String {
 }
 
 internal fun callJS(wv: WebView, params: String) {
-    execOnMain { wv.loadUrl("javascript:pivot.callFromJS($params)") }
+    execOnMain { wv.loadUrl("javascript:pivot.callFromNative($params)") }
 }
 
-internal fun response2JS(wv: WebView, callbackId: String, params: String) {
-    execOnMain { wv.loadUrl("javascript:pivot.responseFromJS($callbackId,$params)") }
+internal fun response2JS(wv: WebView, callbackId: Int, params: String) {
+    execOnMain { wv.loadUrl("javascript:pivot.responseFromNative($callbackId,$params)") }
 }
 
 internal inline fun execOnMain(crossinline f: () -> Unit) {

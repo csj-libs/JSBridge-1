@@ -41,6 +41,5 @@ dependencies {
     testImplementation deps.junit
     androidTestImplementation deps.runner
     androidTestImplementation deps.espresso
-    implementation project(':jstraw')
 }
 
