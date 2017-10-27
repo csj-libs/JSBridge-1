@@ -48,4 +48,5 @@ captures/
 
 #JStraw JSSDK
 /JSLib/node_modules/
-/JSLib/dist/
+/JSLib/dist
+/JSLib/.cache
