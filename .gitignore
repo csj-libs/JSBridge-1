@@ -44,4 +44,8 @@ captures/
 
 # Keystore files
 *.jks
-/jstraw/src/main/assets/WebViewJavascriptBridge.js
+
+
+#JStraw JSSDK
+/JSLib/node_modules/
+/JSLib/dist/
