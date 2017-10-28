@@ -46,7 +46,3 @@ window.responseFromNative = (callbackId, response) => {
         delete callbacks[callbackId];
     }
 };
-
-let count=1;
-
-
