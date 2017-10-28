@@ -21,11 +21,6 @@ internal fun obj2Json(obj: Any): String {
     return gson.toJson(obj)
 }
 
-internal fun generateCallbackId(name: String): String {
-    val uuid = UUID.fromString(name)
-    return uuid.toString().replace("-", "")
-}
-
 internal fun callJS(wv: WebView, params: String) {
     execOnMain { wv.loadUrl("javascript:pivot.callFromNative($params)") }
 }
@@ -44,3 +39,13 @@ internal inline fun execOnMain(crossinline f: () -> Unit) {
     }
 }
 
+internal fun injectJS(wv: WebView?, jsUrl: String) {
+    if (wv != null) {
+
+        val js = "var script = document.createElement('script');" +
+                "script.src = '$jsUrl';" +
+                "var firstScript = document.scripts[0];" +
+                "firstScript.parentNode.insertBefore(script,firstScript);"
+        wv.loadUrl("javascript:$js")
+    }
+}

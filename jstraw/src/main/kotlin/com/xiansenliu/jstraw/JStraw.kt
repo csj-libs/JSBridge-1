@@ -1,36 +1,35 @@
 package com.xiansenliu.jstraw
 
-import android.support.annotation.MainThread
-import android.util.ArrayMap
 import android.util.SparseArray
 import android.webkit.WebView
+import android.webkit.WebViewClient
+import com.xiansenliu.jstraw.callback.NativeCallback
 import com.xiansenliu.jstraw.i.IJStraw
 import com.xiansenliu.jstraw.i.IPivot
 import com.xiansenliu.jstraw.i.NativeHandler
-import com.xiansenliu.jstraw.callback.NativeCallback
+import com.xiansenliu.jstraw.wv.JStrawWebViewClient
 
 /**
  * Author       xinliu
  * Date         10/22/17
  * Time         10:15 AM
  */
-class JStraw internal constructor(wv: WebView) : IJStraw() {
+class JStraw internal constructor(wv: WebView, wcc: WebViewClient) : IJStraw() {
     private val pivot: IPivot = Pivot(wv, this)
-
     private val handlers =
             LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
     private val callbacks = SparseArray<NativeCallback<*>>()
+
+    init {
+        wv.webViewClient = JStrawWebViewClient(wcc,"")
+    }
 
     override fun callJS(handlerName: String, data: String, callback: NativeCallback<*>?) {
         pivot.callJS(handlerName, data, callback)
     }
 
-    fun callJSFun(handlerName: String, data: Any, callback: NativeCallback<*>?) {
-        callJS(handlerName, obj2Json(data), callback)
-    }
-
     override fun registerNativeHandler(handler: NativeHandler<*, *>) {
-        handlers.put(handler.description(), handler)
+        handlers.put(handler.name(), handler)
     }
 
     override fun findNativeHandler(handlerName: String): NativeHandler<*, *>? {
@@ -45,12 +44,6 @@ class JStraw internal constructor(wv: WebView) : IJStraw() {
         val callback = callbacks[callbackId]
         callbacks.remove(callbackId)
         return callback
-    }
-
-    companion object {
-        val TAG = JStraw::class.java.simpleName
-        @MainThread
-        fun create(wv: WebView): IJStraw = JStraw(wv)
     }
 
 }

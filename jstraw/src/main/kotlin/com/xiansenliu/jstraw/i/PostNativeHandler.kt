@@ -3,6 +3,7 @@ package com.xiansenliu.jstraw.i
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
+import com.xiansenliu.jstraw.callback.JSCallback
 import com.xiansenliu.jstraw.json2Obj
 import com.xiansenliu.jstraw.msg.Request
 import com.xiansenliu.jstraw.obj2Json
@@ -20,7 +21,7 @@ interface PostNativeHandler<T, R> : NativeHandler<T, R> {
             val request = json2Obj<Request<T>>(requestStr)
             val mainHandler = Handler(Looper.getMainLooper())
             mainHandler.post {
-                val response = handle(request.params)
+                val response = handle(request.params, JSCallback(wv, request.callbackId))
                 response2JS(wv, request.callbackId, obj2Json(response))
             }
         } else {

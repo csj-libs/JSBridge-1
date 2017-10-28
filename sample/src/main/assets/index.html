@@ -8,33 +8,12 @@
 
 <body>
 <button onclick="callNative()">"点我"</button>
-<button id="btn2" onclick="check()">"Check"</button>
 </body>
 <script>
-    let count = 0;
 
-     function callNative() {
-        new Promise((resolve, reject) => {
-        window.bridge.handleJSCall("Hello from JS");
-            const response = "completed";
-            resolve(response);
-        })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-            console.log('msg sent');
+    function callNative() {
+        window.injected();
     }
-
-    function check() {
-        document.getElementById('btn2').innerText = `Clicked ${count++}`;
-    }
-
-
-
-
 
 
 </script>

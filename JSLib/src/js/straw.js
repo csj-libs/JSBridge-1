@@ -23,7 +23,8 @@ let callNative = (handlerName, params = {}) => {
             };
             pivot.callFromJS(handlerName, JSON.stringify(request));
         } catch (e) {
-            reject(e)
+            reject(e);
+            delete callbacks[callbackId];
         }
     });
 };
@@ -46,3 +47,9 @@ window.responseFromNative = (callbackId, response) => {
         delete callbacks[callbackId];
     }
 };
+
+
+
+const event = new Event('onStrawInit');
+
+document.dispatchEvent(event);

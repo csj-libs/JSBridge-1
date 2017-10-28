@@ -12,6 +12,11 @@ import com.xiansenliu.jstraw.msg.Request
  */
 class Pivot(private val wv: WebView, private val straw: IJStraw) : IPivot {
     private var uniqueId = 0
+
+    init {
+        wv.addJavascriptInterface(this, "pivot")
+    }
+
     override fun callJS(handlerName: String, params: String, callback: NativeCallback<*>?) {
         val callbackId = uniqueId++
         if (callback != null) {

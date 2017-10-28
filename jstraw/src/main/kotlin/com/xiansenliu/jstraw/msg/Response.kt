@@ -11,15 +11,15 @@ data class Response<T>(
         val status: Int,
         @SerializedName("msg")
         val msg: String,
-        @SerializedName("data")
+        @SerializedName("body")
         val data: T
 ) {
     companion object {
         internal val STATUS_OK = 0
         internal val STATUS_FAILED = 1
         internal val STATUS_CANCEL = 2
-        fun <T> success(data: T): Response<T> = Response(STATUS_OK, "success", data)
-        fun cancel(): Response<String> = Response(STATUS_CANCEL, "canceled", "")
-        fun failed(msg: String): Response<String> = Response(STATUS_FAILED, msg, "")
+        fun <T> success(msg: String = "success", data: T): Response<T> = Response(STATUS_OK, msg, data)
+        fun cancel(msg: String = "canceled"): Response<Unit> = Response(STATUS_CANCEL, msg, Unit)
+        fun failed(msg: String = "failed"): Response<Unit> = Response(STATUS_FAILED, msg, Unit)
     }
 }

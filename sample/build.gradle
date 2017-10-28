@@ -7,7 +7,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.xiansenliu.satraw_sample"
+        applicationId "com.xiansenliu.jstraw_sample"
         minSdkVersion rootProject.android.minSdkVersion
         targetSdkVersion rootProject.android.targetSdkVersion
         versionCode rootProject.android.versionCode
@@ -41,5 +41,6 @@ dependencies {
     testImplementation deps.junit
     androidTestImplementation deps.runner
     androidTestImplementation deps.espresso
+    implementation project(':jstraw')
 }
 
