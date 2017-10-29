@@ -8,6 +8,7 @@ import android.os.Message
 import android.view.KeyEvent
 import android.webkit.*
 import com.xiansenliu.jstraw.injectJS
+import com.xiansenliu.jstraw.loadLocalJS
 
 /**
  * Author       xinliu
@@ -22,7 +23,6 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
 
-
         if (puppetWVC != null) {
             return puppetWVC.shouldOverrideUrlLoading(view, request)
         } else {
@@ -30,19 +30,35 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+        if (view == null || request == null) {
+            return puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
+        }
+        if (request.url.toString() == jsUrl) {
+            return loadLocalJS(view, jsUrl) ?: puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
+        }
+        return puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
+    }
+
+    override fun shouldInterceptRequest(view: WebView?, url: String?): WebResourceResponse? {
+        if (view == null || url == null) {
+            return puppetWVC?.shouldInterceptRequest(view, url) ?: super.shouldInterceptRequest(view, url)
+        }
+
+        if (url == jsUrl) {
+            return loadLocalJS(view, jsUrl) ?: puppetWVC?.shouldInterceptRequest(view, jsUrl) ?: super.shouldInterceptRequest(view, jsUrl)
+        }
+        return puppetWVC?.shouldInterceptRequest(view, url) ?: super.shouldInterceptRequest(view, url)
+
+
+    }
+
 
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         return puppetWVC?.shouldOverrideUrlLoading(view, url) ?: super.shouldOverrideUrlLoading(view, url)
     }
 
-    override fun shouldInterceptRequest(view: WebView?, url: String?): WebResourceResponse? {
-        return puppetWVC?.shouldInterceptRequest(view, url)
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-        return puppetWVC?.shouldInterceptRequest(view, request)
-    }
 
     override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
         return puppetWVC?.shouldOverrideKeyEvent(view, event) ?: super.shouldOverrideKeyEvent(view, event)

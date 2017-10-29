@@ -1,6 +1,5 @@
 package com.xiansenliu.jstraw
 
-import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.xiansenliu.jstraw.i.IJStraw
@@ -12,7 +11,7 @@ import com.xiansenliu.jstraw.i.NativeHandler
  * Time         2:45 PM
  */
 class JStrawBuilder(private val wv: WebView) {
-    private var straw_js = ""
+    private var jsUrl = ""
     private val handlers =
             LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
     private var webViewClient: WebViewClient? = null
@@ -27,15 +26,14 @@ class JStrawBuilder(private val wv: WebView) {
         return this
     }
 
-    fun strawJavaScript(): JStrawBuilder {
-        this.straw_js
+    fun strawJavaScript(jsUrl: String): JStrawBuilder {
+        this.jsUrl = parseJSUrl(jsUrl)
         return this
     }
 
     fun build(): IJStraw {
-        val jStraw = JStraw(wv, webViewClient ?: WebViewClient())
+        val jStraw = JStraw(wv, webViewClient, jsUrl)
         handlers.values.forEach { jStraw.registerNativeHandler(it) }
-
         return jStraw
     }
 

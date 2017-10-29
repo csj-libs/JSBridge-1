@@ -14,14 +14,13 @@ import com.xiansenliu.jstraw.wv.JStrawWebViewClient
  * Date         10/22/17
  * Time         10:15 AM
  */
-class JStraw internal constructor(wv: WebView, wcc: WebViewClient) : IJStraw() {
+class JStraw internal constructor(wv: WebView, wcc: WebViewClient?, jsUrl: String) : IJStraw() {
     private val pivot: IPivot = Pivot(wv, this)
-    private val handlers =
-            LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
+    private val handlers = LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
     private val callbacks = SparseArray<NativeCallback<*>>()
 
     init {
-        wv.webViewClient = JStrawWebViewClient(wcc,"")
+        wv.webViewClient = JStrawWebViewClient(wcc, jsUrl)
     }
 
     override fun callJS(handlerName: String, data: String, callback: NativeCallback<*>?) {
