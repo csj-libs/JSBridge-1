@@ -1,15 +1,16 @@
-package com.xiansenliu.jstraw.callback
+package com.xiansenliu.jstraw
 
 import android.webkit.WebView
 import com.xiansenliu.jstraw.msg.Response
-import com.xiansenliu.jstraw.obj2Json
-import com.xiansenliu.jstraw.response2JS
+import com.xiansenliu.jstraw.util.InteractUtil
+import com.xiansenliu.jstraw.util.JsonUtil
 import java.lang.ref.WeakReference
 
 /**
  * Author       xinliu
  * Date         10/28/17
  * Time         1:54 PM
+ * used to send feedback to JS
  */
 class JSCallback<in R>(webView: WebView, private val callbackId: Int) {
     private val wv: WeakReference<WebView> = WeakReference(webView)
@@ -33,7 +34,7 @@ class JSCallback<in R>(webView: WebView, private val callbackId: Int) {
 
     private fun invoke(response: Response<*>) {
         if (wv.get() != null) {
-            response2JS(wv.get()!!, callbackId, obj2Json(Response.cancel()))
+            InteractUtil.response2JS(wv.get()!!, callbackId, JsonUtil.obj2Json(response))
             wv.clear()
         }
     }

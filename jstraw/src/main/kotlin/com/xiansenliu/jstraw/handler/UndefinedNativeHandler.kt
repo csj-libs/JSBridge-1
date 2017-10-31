@@ -1,10 +1,11 @@
-package com.xiansenliu.jstraw
+package com.xiansenliu.jstraw.handler
 
-import com.xiansenliu.jstraw.callback.JSCallback
-import com.xiansenliu.jstraw.i.NativeHandler
+import com.xiansenliu.jstraw.JSCallback
 
 /**
- * Created by xinliu on 10/24/17.
+ * Author       xinliu
+ * Date         10/24/17
+ * Time
  */
 object UndefinedNativeHandler : NativeHandler<Any, String> {
     override fun handle(data: Any, callback: JSCallback<String>) {

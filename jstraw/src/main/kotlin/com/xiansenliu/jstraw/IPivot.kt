@@ -1,6 +1,6 @@
-package com.xiansenliu.jstraw.i
+package com.xiansenliu.jstraw
 
-import com.xiansenliu.jstraw.callback.NativeCallback
+import com.xiansenliu.jstraw.NativeCallback
 
 /**
  * Author       xinliu
@@ -12,7 +12,7 @@ internal interface IPivot {
     /**
      * this method is used to call JS function
      * */
-    fun callJS(handlerName: String, params: String, callback: NativeCallback<*>?)
+    fun callJS(handlerName: String, params: String, callback: NativeCallback<*>)
 
     /**
      * this method will received JS's call

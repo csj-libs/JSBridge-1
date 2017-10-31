@@ -3,10 +3,12 @@ package com.xiansenliu.jstraw.msg
 import com.google.gson.annotations.SerializedName
 
 /**
- * Created by xinliu on 10/24/17.
+ * Author       xinliu
+ * Date         10/24/17
+ * Time
  * Model that represents the response send 2 and from JS
  */
-data class Response<T>(
+data class Response<out T>(
         @SerializedName("status")
         val status: Int,
         @SerializedName("msg")

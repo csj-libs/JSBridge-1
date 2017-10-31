@@ -1,12 +1,10 @@
 package com.xiansenliu.jstraw
 
+import android.annotation.SuppressLint
 import android.util.SparseArray
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.xiansenliu.jstraw.callback.NativeCallback
-import com.xiansenliu.jstraw.i.IJStraw
-import com.xiansenliu.jstraw.i.IPivot
-import com.xiansenliu.jstraw.i.NativeHandler
+import com.xiansenliu.jstraw.handler.NativeHandler
 import com.xiansenliu.jstraw.wv.JStrawWebViewClient
 
 /**
@@ -14,17 +12,21 @@ import com.xiansenliu.jstraw.wv.JStrawWebViewClient
  * Date         10/22/17
  * Time         10:15 AM
  */
+@SuppressLint("SetJavaScriptEnabled")
 class JStraw internal constructor(wv: WebView, wcc: WebViewClient?, jsUrl: String) : IJStraw() {
     private val pivot: IPivot = Pivot(wv, this)
     private val handlers = LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
     private val callbacks = SparseArray<NativeCallback<*>>()
 
     init {
+        with(wv.settings) {
+            javaScriptEnabled = true
+        }
         wv.webViewClient = JStrawWebViewClient(wcc, jsUrl)
     }
 
-    override fun callJS(handlerName: String, data: String, callback: NativeCallback<*>?) {
-        pivot.callJS(handlerName, data, callback)
+    override fun <T> callJS(handlerName: String, data: String): NativeCallback<T> {
+        return NativeCallback(pivot, handlerName, data)
     }
 
     override fun registerNativeHandler(handler: NativeHandler<*, *>) {

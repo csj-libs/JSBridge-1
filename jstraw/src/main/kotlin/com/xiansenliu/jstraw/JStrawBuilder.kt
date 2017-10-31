@@ -2,8 +2,8 @@ package com.xiansenliu.jstraw
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.xiansenliu.jstraw.i.IJStraw
-import com.xiansenliu.jstraw.i.NativeHandler
+import com.xiansenliu.jstraw.handler.NativeHandler
+import com.xiansenliu.jstraw.util.InjectUtil
 
 /**
  * Author       xinliu
@@ -11,11 +11,15 @@ import com.xiansenliu.jstraw.i.NativeHandler
  * Time         2:45 PM
  */
 class JStrawBuilder(private val wv: WebView) {
-    private var jsUrl = ""
+    private var jsUrl = InjectUtil.parseJSUrl("file:///android_asset/straw.bundle-1.0.0.js")
     private val handlers =
             LinkedHashMap<String, NativeHandler<*, *>>(10, 0.75f, true)
     private var webViewClient: WebViewClient? = null
 
+    /**
+     * if you'd like to set your custom WebViewClient,do it by calling
+     * this method,or the target JS will not be injected.
+     * */
     fun webviewClient(wvc: WebViewClient = WebViewClient()): JStrawBuilder {
         this.webViewClient = wvc
         return this
@@ -26,8 +30,15 @@ class JStrawBuilder(private val wv: WebView) {
         return this
     }
 
+    /**
+     * @param jsUrl the js file that you want to inject into the current page,
+     *              it looks like "file:///android_asset/your/own/jsfile.js" or
+     *              "/path/to/your/own/jsfile.js" and even a remote link like
+     *              "https://authority/path/to/your/jsfile.js".There maybe some
+     *              mistake if you remote js file is over http rather than https
+     * */
     fun strawJavaScript(jsUrl: String): JStrawBuilder {
-        this.jsUrl = parseJSUrl(jsUrl)
+        this.jsUrl = InjectUtil.parseJSUrl(jsUrl)
         return this
     }
 

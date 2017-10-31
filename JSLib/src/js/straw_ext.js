@@ -1,4 +1,5 @@
 const nativeApiList = [{
+    "funName":"isLogin",
     "handlerName": "isLogin",
     "needParams": false
 }];
@@ -17,13 +18,10 @@ let apiGenerator = (nativeApi) => {
 
 let apiFactory = (list) => {
     list.forEach((nativeApi) => {
-        straw[`${nativeApi.handlerName}`] = apiGenerator(nativeApi);
+        straw[`${nativeApi.funName}`] = apiGenerator(nativeApi);
     });
-    // for (var i in list) {
-    //   const nativeApi = list[i];
-    // }
 };
-// TODO this method should be called after straw.bundle.js id loaded
+//function apiFactory() below should be called after straw.bundle-x.x.x.js is loaded
 if (window.straw) {
     apiFactory(nativeApiList);
 } else {
@@ -32,7 +30,3 @@ if (window.straw) {
         apiFactory(nativeApiList);
     });
 }
-// window.prod = () => {
-//   console.log(nativeApiList);
-//
-// };

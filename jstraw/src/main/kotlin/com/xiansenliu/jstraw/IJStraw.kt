@@ -1,6 +1,6 @@
-package com.xiansenliu.jstraw.i
+package com.xiansenliu.jstraw
 
-import com.xiansenliu.jstraw.callback.NativeCallback
+import com.xiansenliu.jstraw.handler.NativeHandler
 
 /**
  * Author       xinliu
@@ -10,7 +10,7 @@ import com.xiansenliu.jstraw.callback.NativeCallback
 abstract class IJStraw {
 
 
-    abstract fun callJS(handlerName: String, data: String = "{}", callback: NativeCallback<*>? = null)
+    abstract  fun <T> callJS(handlerName: String, data: String = ""): NativeCallback<T>
 
     abstract fun registerNativeHandler(handler: NativeHandler<*, *>)
     abstract internal fun findNativeHandler(handlerName: String): NativeHandler<*, *>?

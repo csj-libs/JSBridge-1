@@ -7,6 +7,9 @@ window.pivot = {
             data: {}
         };
         responseFromNative(request.callback_id, JSON.stringify(response))
+    },
+    responseFromJS: (callbackId, data) => {
+        console.log(JSON.stringify(data))
     }
 
 };

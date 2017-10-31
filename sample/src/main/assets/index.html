@@ -7,13 +7,35 @@
 </head>
 
 <body>
-<button onclick="callNative()">"点我"</button>
+<button onclick="callNative()">Call Native</button>
 </body>
 <script>
 
     function callNative() {
-        window.injected();
+    <!-- call Native's String Handler that we registered in MainActivity-->
+        straw.callNative('StringHandler','How are you?')
+        .then((res)=>{
+            console.log(res.body)
+        });
     }
+    <!--register a handler named StringHandler-->
+    function init(){
+        straw.registerJSHandler('StringHandler',{
+            handle:function(request,callback){
+                console.log(request.params);
+                callback.success('I\'m fine!!!');
+            }
+        });
+    }
+    if (window.straw) {
+        init();
+    } else {
+        document.addEventListener('onStrawInit', (event) => {
+            init();
+        });
+    }
+
+
 
 
 </script>

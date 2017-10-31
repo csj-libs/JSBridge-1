@@ -1,76 +1,57 @@
 package com.xiansenliu.sample
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.Window
-import android.webkit.*
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
+import android.webkit.WebView
+import com.xiansenliu.jstraw.JStrawBuilder
+import com.xiansenliu.jstraw.JSCallback
+import com.xiansenliu.jstraw.IJStraw
+import com.xiansenliu.jstraw.handler.NativeHandler
+import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var wv: WebView
+    lateinit var jStraw: IJStraw
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wv = WebView(this)
         setContentView(wv)
-        with(wv.settings) {
-            javaScriptEnabled = true
-            allowContentAccess = true
-            allowFileAccess = true
-            allowFileAccessFromFileURLs = true
-            allowUniversalAccessFromFileURLs = true
-            domStorageEnabled = true
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-            }
-        }
-        wv.addJavascriptInterface(Bridge(), "bridge")
-        wv.loadUrl("https://tech.meituan.com")
-//        wv.loadUrl("file:///android_asset/index.html")
-        wv.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                if (view != null) {
-//                    injectJS(view, "file:///android_asset/test.js")
-                    injectJS(view, "test.js")
-                }
-            }
+        jStraw = JStrawBuilder(wv)
+//                register a handler
+                .handler(object : NativeHandler<String, String> {
+                    override fun name(): String = "StringHandler"
 
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-                if (view == null || request == null) {
-                    return super.shouldInterceptRequest(view, request)
-                }
-//                val url = request.url
-//                Log.i("shouldInterceptRequest",url.path)
-//                if (url.host == "android_asset") {
-//                    val inputStream = this@MainActivity.assets.open("test.js")
-//                    return WebResourceResponse("text/javascript", "UTF-8", inputStream)
-//                }
-                return super.shouldInterceptRequest(view, request)
-            }
-        }
+                    override fun handle(data: String, callback: JSCallback<String>) {
+                        toast("JS:$data")
+                        callback.success("I'm fine!!!")
+                    }
+                })
+                .build()
+        wv.loadUrl("file:///android_asset/index.html")
     }
 
-    fun injectJS(wv: WebView, jsUrl: String) {
-        val js = "var script = document.createElement('script');" +
-                "script.src = '$jsUrl';" +
-                "var firstScript = document.scripts[0];" +
-                "firstScript.parentNode.insertBefore(script,firstScript);"
-        wv.loadUrl("javascript:$js")
-
-
-        wv.postDelayed({ wv.loadUrl("javascript:console.log(window.injected);") }, 2000)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
     }
-}
 
-class Bridge {
-    @JavascriptInterface
-    fun handleJSCall(msg: String) {
-        Log.i("Bridge", msg)
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_call_js -> {
+                jStraw.callJS<String>("StringHandler", "Hello")
+                        .success { result: String -> toast(result) }
+                        .failed { msg -> toast(msg) }
+                        .canceled { toast("canceled") }
+                        .error { e -> toast(e.message.toString()) }
+                        .exec()
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

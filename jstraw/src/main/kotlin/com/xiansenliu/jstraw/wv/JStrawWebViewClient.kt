@@ -7,8 +7,7 @@ import android.os.Build
 import android.os.Message
 import android.view.KeyEvent
 import android.webkit.*
-import com.xiansenliu.jstraw.injectJS
-import com.xiansenliu.jstraw.loadLocalJS
+import com.xiansenliu.jstraw.util.InjectUtil
 
 /**
  * Author       xinliu
@@ -17,12 +16,12 @@ import com.xiansenliu.jstraw.loadLocalJS
  */
 class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsUrl: String) : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
-        injectJS(view, jsUrl)
+        InjectUtil.injectJS(view, jsUrl)
         puppetWVC?.onPageFinished(view, url)
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-
         if (puppetWVC != null) {
             return puppetWVC.shouldOverrideUrlLoading(view, request)
         } else {
@@ -36,7 +35,7 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
             return puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
         }
         if (request.url.toString() == jsUrl) {
-            return loadLocalJS(view, jsUrl) ?: puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
+            return InjectUtil.loadLocalJS(view, jsUrl) ?: puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
         }
         return puppetWVC?.shouldInterceptRequest(view, request) ?: super.shouldInterceptRequest(view, request)
     }
@@ -47,7 +46,7 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
         }
 
         if (url == jsUrl) {
-            return loadLocalJS(view, jsUrl) ?: puppetWVC?.shouldInterceptRequest(view, jsUrl) ?: super.shouldInterceptRequest(view, jsUrl)
+            return InjectUtil.loadLocalJS(view, jsUrl) ?: puppetWVC?.shouldInterceptRequest(view, jsUrl) ?: super.shouldInterceptRequest(view, jsUrl)
         }
         return puppetWVC?.shouldInterceptRequest(view, url) ?: super.shouldInterceptRequest(view, url)
 
@@ -77,6 +76,7 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
         puppetWVC?.onReceivedError(view, request, error)
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
         return puppetWVC?.onRenderProcessGone(view, detail) ?: super.onRenderProcessGone(view, detail)
     }
@@ -85,6 +85,7 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
         puppetWVC?.onReceivedLoginRequest(view, realm, account, args)
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
         puppetWVC?.onReceivedHttpError(view, request, errorResponse)
     }
@@ -97,6 +98,7 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
         puppetWVC?.onScaleChanged(view, oldScale, newScale)
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     override fun onPageCommitVisible(view: WebView?, url: String?) {
         puppetWVC?.onPageCommitVisible(view, url)
     }
@@ -105,6 +107,7 @@ class JStrawWebViewClient(private val puppetWVC: WebViewClient?, private var jsU
         puppetWVC?.onUnhandledKeyEvent(view, event)
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onReceivedClientCertRequest(view: WebView?, request: ClientCertRequest?) {
         puppetWVC?.onReceivedClientCertRequest(view, request)
     }

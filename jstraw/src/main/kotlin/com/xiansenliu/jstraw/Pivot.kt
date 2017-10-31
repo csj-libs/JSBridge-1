@@ -2,28 +2,31 @@ package com.xiansenliu.jstraw
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import com.xiansenliu.jstraw.callback.NativeCallback
-import com.xiansenliu.jstraw.i.IJStraw
-import com.xiansenliu.jstraw.i.IPivot
+import com.xiansenliu.jstraw.handler.UndefinedNativeHandler
 import com.xiansenliu.jstraw.msg.Request
+import com.xiansenliu.jstraw.util.InteractUtil
+import com.xiansenliu.jstraw.util.JsonUtil
 
 /**
- * Created by xinliu on 10/23/17.
+ * Author       xinliu
+ * Date         10/23/17
+ * Time
  */
 class Pivot(private val wv: WebView, private val straw: IJStraw) : IPivot {
     private var uniqueId = 0
+    private val TAG = "Pivot"
 
     init {
         wv.addJavascriptInterface(this, "pivot")
     }
 
-    override fun callJS(handlerName: String, params: String, callback: NativeCallback<*>?) {
+    override fun callJS(handlerName: String, params: String, callback: NativeCallback<*>) {
         val callbackId = uniqueId++
-        if (callback != null) {
-            straw.addCallback(callbackId, callback)
-        }
+        straw.addCallback(callbackId, callback)
         val request = Request.create(handlerName, callbackId, params)
-        callJS(wv, obj2Json(request))
+        val requestStr = JsonUtil.obj2Json(request)
+
+        InteractUtil.callJS(wv, requestStr)
     }
 
     @JavascriptInterface
