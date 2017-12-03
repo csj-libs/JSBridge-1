@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                 })
                 .build()
         wv.loadUrl("file:///android_asset/index.html")
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity() {
                         .canceled { toast("canceled") }
                         .error { e -> toast(e.message.toString()) }
                         .exec()
-
             }
         }
         return super.onOptionsItemSelected(item)

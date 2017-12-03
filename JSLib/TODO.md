@@ -1,3 +1,4 @@
-- [x] Promise 调用形式
-- [x] Json 配置动态生成调用接口
-- [ ] pending calls
+- [x] Promise 调用形式 
+- [x] Json 配置动态生成调用接口 
+- [ ] 移除无效回调 
+- [ ] pending calls 

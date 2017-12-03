@@ -44,4 +44,5 @@ dependencies {
     androidTestImplementation deps.espresso
 }
 
+apply from: 'maven_push.gradle'
 
