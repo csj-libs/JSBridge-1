@@ -1,10 +1,10 @@
-# JPipe
+# JStraw
 A simple JSBridge for Android which helps with the interaction between Java and JavaScript
 
 ## How to use (in Kotlin)
 > Communication is two-way : native serves js or js servers native 
-#### Native serves JS
-### Native side
+### Native serves JS
+#### Native side
 - Step One. 
 create your NativeHandler which will handle the message from JavaScript 
 ```kotlin
@@ -27,7 +27,7 @@ val jStraw = JStrawBuilder(webview)
                 .build()
 ```
 
-### JS Side
+#### JS Side
 - Step One.
 You should register a event listener,because the bridge may not be available when your web page is 
 loaded, and all the service provided by native should be used after **onStrawInit** event is being 
@@ -56,8 +56,8 @@ straw.callNative('StringHandler','How are you?')
 All your works done,enjoy it!!!
 
 
-#### JS serves Native
-### JS Side 
+### JS serves Native
+#### JS Side 
 - Step One.
 You should register a event listener,because the bridge may not be available when your web page is 
 loaded, and all the service provided by native should be used after **onStrawInit** event is being 
@@ -84,7 +84,7 @@ straw.registerJSHandler('JSHelloHandler',{
 });
 ```
 
-### Native Side
+#### Native Side
 - Step One.
 Create an instance of JStraw,and load the web page.
 ```kotlin
