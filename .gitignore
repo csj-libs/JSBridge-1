@@ -46,9 +46,8 @@ captures/
 *.jks
 
 
-#JStraw JSSDK
-/JSLib/node_modules/
-/JSLib/dist
-/JSLib/.cache
-/jstraw/src/main/assets/straw.bundle-*.js
-/jstraw-ext/src/main/assets/straw_ext.bundle-*.js
+#BridgeJS JSSDK
+bridgejs/node_modules/
+bridgejs/dist
+bridgejs/.cache
+bridge/src/main/assets/straw.bundle-*.js
