@@ -1,24 +1,27 @@
+const path = require('path');
 const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
-const PackageInfo = require('./package.json');
-const version = PackageInfo.version;
-module.exports = merge(common, {
+const commom = require('./webpack.common');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
+module.exports = merge(commom, {
+  mode: 'production',
+  entry: {
+    bridgecore: './src/core/bridge.ts',
+    bridgesdk: './src/sdk/bridgesdk.ts'
+  },
   output: {
-    filename: `[name].bundle-${version}.js`
+    filename: '[name].min.js',
+    chunkFilename: '[name].min.js',
+    libraryTarget: 'umd',
+    path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
-    new ParallelUglifyPlugin({
-      cacheDir: '.cache/',
-      uglifyJS: {
-        output: {
-          comments: false
-        },
-        compress: {
-          warnings: false
-        }
-      }
+    new CleanWebpackPlugin(['./dist']),
+    new UglifyjsWebpackPlugin({
+      parallel: 4
+    }),
+    new UglifyjsWebpackPlugin({
+      parallel: 4
     })
-
-  ]
+  ],
 });
