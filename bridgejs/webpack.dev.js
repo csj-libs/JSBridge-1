@@ -2,7 +2,6 @@ const path = require('path');
 const merge = require('webpack-merge');
 const commom = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 module.exports = merge(commom, {
   mode: 'development',
   entry: {
@@ -11,8 +10,8 @@ module.exports = merge(commom, {
     bridgesdk: './src/sdk/bridgesdk.ts'
   },
   output: {
-    filename: 'js/[name].js',
-    chunkFilename: 'js/[name].js',
+    filename: '[name].js',
+    chunkFilename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {

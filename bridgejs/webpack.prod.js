@@ -10,16 +10,13 @@ module.exports = merge(commom, {
     bridgesdk: './src/sdk/bridgesdk.ts'
   },
   output: {
-    filename: '[name].min.js',
-    chunkFilename: '[name].min.js',
-    libraryTarget: 'umd',
+    filename: '[name].[chunkhash:4].js',
+    chunkFilename: '[name].[chunkhash:4].js',
+    libraryTarget: 'commonjs2',
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
     new CleanWebpackPlugin(['./dist']),
-    new UglifyjsWebpackPlugin({
-      parallel: 4
-    }),
     new UglifyjsWebpackPlugin({
       parallel: 4
     })

@@ -15,7 +15,11 @@ function getBridge(): Bridge {
 
 // FIXME: this is a sample
 function showToast(msg: string): Promise<string> {
-    return getBridge().callNative<string, string>(nativeServices.showToast, msg);
+    return getBridge().callNative<string, string>(nativeServices.showToast, msg)
+        .then((r) => {
+            // asd
+            return Promise.resolve(r);
+        });
 }
 
 export {
