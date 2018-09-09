@@ -1,135 +1,117 @@
-# JStraw
-A simple JSBridge for Android which helps with the interaction between Java and JavaScript
+# JSBridge
+JSBridge 的简单实现，Native 端使用 Kotlin、JS 端使用 Typescript 实现
+支持双向通信
 
-## How to use (in Kotlin)
-> Communication is two-way : native serves js or js servers native 
-### Native serves JS
-#### Native side
-- Step One. 
-create your NativeHandler which will handle the message from JavaScript 
+
+
+## Native 引入
+
 ```kotlin
-class HelloNativeHandler:NativeHandler<String, String> {
-//  the returned value should be meaningful and it will be referenced in JavaScript
-    override fun name(): String = "StringHandler"
-//  this method is not run in main thread,but all the callback's methods will run in main thread.
-    override fun handle(data: String, callback: JSCallback<String>) {
-        toast("JS:$data")
-        callback.success("I'm fine!!!")
+val injector = object : BridgeJSInjector() {
+    override fun jsContent(): String {
+        // 这里替换成 bridgecore.js 内容
+        // TODO: 这里入侵性更低的方式
+        return "console.log('hello world');"
     }
 }
-```
-
-- Step Two.
-Create an instance of JStraw with JStrawBuilder,and register your HelloNativeHandler.
- ```kotlin
-val jStraw = JStrawBuilder(webview)
-                .handler(HelloNativeHandler())
-                .build()
-```
-
-#### JS Side
-- Step One.
-You should register a event listener,because the bridge may not be available when your web page is 
-loaded, and all the service provided by native should be used after **onStrawInit** event is being 
-triggered.
-```javascript
-if (window.straw) {
-//  your work
-} else {
-    document.addEventListener('onStrawInit', (event) => {
-//      your work
-    });
-}
-```
-- Step Two.
-After the bridge's initialization is completed,you can call native for some service.
-```javascript
-straw.callNative('StringHandler','How are you?')
-.then((res)=>{
-//  parameter represents the result, and you should determine whether the call is succes 
-//  by res.status ( 0 => ok/success, 1 => failed, 2 => canceled ).
-    console.log(res.body)
-}).catch((error)=>{
-    console.log(error)
-});
-``` 
-All your works done,enjoy it!!!
-
-
-### JS serves Native
-#### JS Side 
-- Step One.
-You should register a event listener,because the bridge may not be available when your web page is 
-loaded, and all the service provided by native should be used after **onStrawInit** event is being 
-triggered.
-```javascript
-if (window.straw) {
-//  your work
-} else {
-    document.addEventListener('onStrawInit', (event) => {
-//      your work
-    });
-}
-```
-
-- Step Two.
-Register you JSHandler which will receives the message from native.
-```javascript
-//  the `JsHelloHandler` will be referenced in native,try to make it meaningful.
-straw.registerJSHandler('JSHelloHandler',{
-    handle:function(request,callback){
-        console.log(request.params);
-        callback.success('I\'m fine!!!');
+wv.webViewClient = object : WebViewClient() {
+    override fun onPageFinished(view: WebView?, url: String?) {
+        super.onPageFinished(view, url)
+        injector.onPageFinished(view)
     }
+}
+bridge = BridgeImpl(wv)
+```
+
+
+
+
+
+## Native 注册服务
+实现 `Service` 子类：
+```kotlin
+@ServiceName(name="toast")
+class YourService : Service<Any, String>() {
+    override fun handle(data: Any, callback: JSCallback<String>) {
+        // ...
+        callback.success("the result!")
+    }
+}
+
+// 注册
+Bridge.registerService(YourService())
+```
+
+这里要注意 `handle` 方法执行在子线程，如果要对 View 进行修改操作，需要切换线程
+
+
+
+## JS 调用 Native 服务 
+
+支持 `Promise` :
+
+```javascript
+// 便捷封装
+function showToast(msg: string): Promise<string> {
+    return getBridge().callNative<string, string>('toast', msg)
+        .then((r) => {
+            return Promise.resolve(r);
+        });
+}
+// 调用
+showToast("this is arg")
+    .then((result) => {
+    // tslint:disable-next-line:no-console
+    console.log(result);
+}).catch((e) => {
+    // tslint:disable-next-line:no-console
+    console.error(e);
 });
 ```
 
-#### Native Side
-- Step One.
-Create an instance of JStraw,and load the web page.
+
+
+## JS 注册服务
+
+实现 `Service` 子类:
+
+```typescript
+class YourService extends Service<string, string> {
+    
+    public handle(param: string, callback: RemoteCallback<string>): void {
+        callback.success(`the result!`);
+    }
+}
+
+export YourService;
+
+// 注册服务，TS 方式
+((window as any)[BRIDGE] as Bridge).registerService(new YourService('js service'))
+```
+
+
+
+## Native 调用 JS 服务
+
 ```kotlin
-val jstraw = JStrawBuilder(webview).build()
-jstraw.loadUrl("url/of/the/page.html")
+bridge.callJS("js service", "this is the arg", object : NativeCallback<String>() {
+    override fun success(result: String) {
+        // ...
+    }
+
+    override fun failed(msg: String) {
+        // ...
+    }
+
+    override fun canceled(msg: String) {
+        // ...
+    }
+})
 ```
 
-- Step Two.
-Call JS
-```kotlin
-//  the generic type String indicates your expected returned data is a String instance.
-jStraw.callJS<String>("JSHelloHandler", "Hello")
-        .success { result: String -> toast(result) }
-        .failed { msg -> toast(msg) }
-        .canceled { toast("canceled") }
-        .error { e -> toast(e.message.toString()) }
-        .exec()
-```
-Enjoy it !
+回调方法执行线程都在 non-UI 线程，所以要注意线程安全
 
 
-## The Ext Module (has not launched yet)
-> This module provides some basic function for each others( js and native )
-
-## How to Build
-- Step One.
-you should install `npm`,and enter the `JSLib`,then run command:
-```shell
-npm install --save-dev
-npm build
-```
-> Note : if your platform is Windows,edit the `mv.sh` with Windows'batch command.
-
-- Step Two.
-build Android Project
-
-
-## Some Problems
-- it will caused some bad reaction if interaction is happening in the initializing period.
-- it is very simple for JS to generate interface of native's services,but native has to
-write some boring code even create a subclass of JStraw
-
-
-## How to Integrate
-> this library has not been upload to JitPack or Jcenter yet.
 
 ## License 
 
