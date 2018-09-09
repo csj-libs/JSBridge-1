@@ -33,7 +33,7 @@
     "webpack-merge": "^4.1.4"
   },
   "scripts": {
-    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config ./webpack.dev.js --display-error-details --progress --colors --open 'Google Chrome Canary'",
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config ./webpack.dev.js --display-error-details --progress --colors --open 'Google Chrome'",
     "build": "npm run lint && ./node_modules/webpack/bin/webpack.js --config ./webpack.prod.js --display-error-details --progress --colors",
     "lint": "./node_modules/tslint/bin/tslint --fix -p . -c tslint.json",
     "test": "echo \"Error: no test specified\" && exit 1"

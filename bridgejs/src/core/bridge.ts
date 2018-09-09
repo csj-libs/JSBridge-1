@@ -1,8 +1,8 @@
 import UUID from "uuid/v4";
-import { JSCallback } from "./callbacks";
+import { LocalCallback } from "./callbacks";
 import { Request, Response } from "./models";
 import { IProxyListener, Proxy } from "./proxy";
-import { Service } from "./service";
+import { FallbackService, Service } from "./service";
 
 export default class Bridge {
     private reqmanager = new RequestManager();
@@ -24,17 +24,13 @@ export default class Bridge {
         }()
     )(this.reqmanager, this.servicemanager));
 
-    constructor() {
-        // console.log("init");
-    }
-
     /**
      * callNative
      */
     public callNative<T, R>(service: string, param: T): Promise<R> {
         return new Promise<R>(((resolve, reject) => {
             const req = this.reqmanager.newRequest(service, param, (() => {
-                return new class AnonymousJSCallback extends JSCallback<R> {
+                return new class AnonymousJSCallback extends LocalCallback<R> {
                     public success(result: R): void {
                         resolve(result);
                     }
@@ -60,11 +56,11 @@ export default class Bridge {
 
 class RequestManager {
     private outgoingrequests = new Map<string, Request<any>>();
-    private outgoingcallbacks = new Map<string, JSCallback<any>>();
+    private outgoingcallbacks = new Map<string, LocalCallback<any>>();
     /**
      * newRequest
      */
-    public newRequest(service: string, param: any, cb: JSCallback<any>): Request<any> {
+    public newRequest(service: string, param: any, cb: LocalCallback<any>): Request<any> {
         const uuid = UUID();
         const req = new Request(uuid, service, param);
         this.outgoingrequests.set(uuid, req);
@@ -79,9 +75,9 @@ class RequestManager {
         this.outgoingrequests.delete(uuid);
     }
     /**
-     * pickCallback
+     * pick callback
      */
-    public findCallback(uuid: string): JSCallback<any> | undefined {
+    public findCallback(uuid: string): LocalCallback<any> | undefined {
         const cb = this.outgoingcallbacks.get(uuid);
         this.outgoingcallbacks.delete(uuid);
         this.outgoingrequests.delete(uuid);
@@ -92,8 +88,9 @@ class RequestManager {
 
 class ServiceManager {
     private readonly services = new Map<string, Service<any, any>>();
+    private readonly fallbackService = new FallbackService(UUID());
     /**
-     * register
+     * register a service
      */
     public register<T, R>(service: Service<T, R>) {
         if (!this.services.get(service.name)) {
@@ -105,8 +102,7 @@ class ServiceManager {
      * find
      */
     public find(name: string): Service<any, any> | undefined {
-        return this.services.get(name);
+        const s = this.services.get(name);
+        return s ? s : this.fallbackService;
     }
 }
-
-(window as any).bridge = new Bridge();

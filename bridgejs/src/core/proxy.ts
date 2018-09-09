@@ -1,10 +1,10 @@
 import { Request, Response } from "./models";
-const NATIVE_PROXY = "NATIVE_PROXY";
-const JS_PROXY = "JS_PROXY";
-
+const REMOTE_PROXY = "REMOTE_PROXY";
+const LOCAL_PROXY = "LOCAL_PROXY";
+// Proxy this class is mounted on window for Native calling
 class Proxy {
     constructor(private readonly listenr: IProxyListener) {
-        (window as any)[JS_PROXY] = this;
+        (window as any)[LOCAL_PROXY] = this;
     }
 
     /**
@@ -12,25 +12,28 @@ class Proxy {
      * @param req request
      */
     public request2Native(req: Request<any>) {
-        ((window as any)[NATIVE_PROXY] as INativeProxy).requestFromJS(JSON.stringify(req));
+        ((window as any)[REMOTE_PROXY] as IRemoteProxy).requestFromJS(JSON.stringify(req));
     }
 
     /**
      * response2Native
-     * @param uuid unique identifier for the coresponding request from native
+     * @param uuid unique identifier for the corresponding request from native
      */
     public response2Native(uuid: string, res: Response<any>) {
-        ((window as any)[NATIVE_PROXY] as INativeProxy).responseFromJS(uuid, JSON.stringify(res));
+        ((window as any)[REMOTE_PROXY] as IRemoteProxy).responseFromJS(uuid, JSON.stringify(res));
     }
 
     /**
      * requestFromNative
+     * @param service target service name
+     * @param req request entity with uuid、service and params
      */
     public requestFromNative(service: string, req: Request<any>) {
         this.listenr.onRequest(service, req, this);
     }
     /**
      * responseFromNative
+     * @param uuid unique identifier for the corresponding request to native
      */
     public responseFromNative(uuid: string, res: Response<any>) {
         this.listenr.onResponse(uuid, res);
@@ -42,10 +45,11 @@ interface IProxyListener {
     onResponse(uuid: string, res: Response<any>): void;
 }
 
-interface INativeProxy {
+interface IRemoteProxy {
     requestFromJS(reqStr: string): void;
     responseFromJS(uuid: string, resStr: string): void;
 }
+
 export {
     Proxy,
     IProxyListener,

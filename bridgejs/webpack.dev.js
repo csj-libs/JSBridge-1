@@ -5,9 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = merge(commom, {
   mode: 'development',
   entry: {
-    index: './src/mock_index.jsx',
-    bridgecore: './src/core/bridge.ts',
-    bridgesdk: './src/sdk/bridgesdk.ts'
+    index: './src/mock_index.tsx',
+    // bridgecore: './src/core/bridge.ts',
+    // bridgesdk: './src/sdk/bridgesdk.ts'
   },
   output: {
     filename: '[name].js',

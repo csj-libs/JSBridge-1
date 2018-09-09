@@ -1,4 +1,4 @@
-import { NativeCallback } from "./callbacks";
+import { RemoteCallback } from "./callbacks";
 import { Request } from "./models";
 import { Proxy } from "./proxy";
 abstract class Service<T, R> {
@@ -7,14 +7,14 @@ abstract class Service<T, R> {
      * handleNativeRequest
      */
     public handleNativeRequest(request: Request<T>, proxy: Proxy) {
-        this.handle(request.param, new NativeCallback(request.uuid, proxy));
+        this.handle(request.param, new RemoteCallback(request.uuid, proxy));
     }
 
-    public abstract handle(param: T, callback: NativeCallback<R>): void;
+    public abstract handle(param: T, callback: RemoteCallback<R>): void;
 }
 class FallbackService extends Service<any, any> {
-    public handle(param: any, callback: NativeCallback<any>): void {
-        callback.falied("service not found...");
+    public handle(param: any, callback: RemoteCallback<any>): void {
+        callback.falied(`service not found`);
     }
 }
 

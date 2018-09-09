@@ -6,18 +6,20 @@ import Bridge from "../core/bridge";
  * then developers can request native service by simplely
  * calling bridgesdk.servicemethod(param).then(r=>{})
  */
+const BRIDGE = "BRIDGE";
 const nativeServices = {
     showToast: "toast",
 };
 function getBridge(): Bridge {
-    return (window as any).bridge as Bridge;
+    if (!(window as any)[BRIDGE]) {
+        (window as any)[BRIDGE] = new Bridge();
+    }
+    return (window as any)[BRIDGE] as Bridge;
 }
 
-// FIXME: this is a sample
 function showToast(msg: string): Promise<string> {
     return getBridge().callNative<string, string>(nativeServices.showToast, msg)
         .then((r) => {
-            // asd
             return Promise.resolve(r);
         });
 }

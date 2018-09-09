@@ -1,6 +1,6 @@
 import { Response } from "./models";
 import { Proxy } from "./proxy";
-abstract class JSCallback<T> {
+abstract class LocalCallback<T> {
     /**
      * delivery
      */
@@ -38,7 +38,7 @@ abstract class JSCallback<T> {
 /**
  * send feed back to native
  */
-class NativeCallback<T> {
+class RemoteCallback<T> {
 
     constructor(private readonly uuid: string, private readonly proxy: Proxy) { }
 
@@ -69,6 +69,6 @@ class NativeCallback<T> {
 }
 
 export {
-    JSCallback,
-    NativeCallback,
+    LocalCallback,
+    RemoteCallback,
 };
