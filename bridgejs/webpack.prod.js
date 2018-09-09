@@ -10,8 +10,8 @@ module.exports = merge(commom, {
     bridgesdk: './src/sdk/bridgesdk.ts'
   },
   output: {
-    filename: '[name].[chunkhash:4].js',
-    chunkFilename: '[name].[chunkhash:4].js',
+    filename: '[name].js',
+    chunkFilename: '[name].js',
     libraryTarget: 'commonjs2',
     path: path.resolve(__dirname, 'dist'),
   },
